@@ -9,27 +9,25 @@ import javafx.scene.layout.Pane;
 import sample.FlyWeight.Beat;
 import sample.FlyWeight.BeatImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public class FallHandler {
+public class PlayHandler {
     private double barHeight;
     private double endHeight;
     private float BPM;
-    private List<ImageView> beats = new ArrayList<>();
-    private Thread fallThread;
-    private Thread spawnBeatsThread;
+
+    // all existing beats
+    private HashMap<Pane, List<ImageView>> beats = new HashMap<>();
 
     private float songPosition;
     private float songPositionInBeats;
     private long startTime;
     private float secPerBeat;
 
-    private List<Pane> columns = new ArrayList<>();
+    private List<Pane> columns;
     int prevBeat = 0;
 
-    public FallHandler(double barHeight, double endHeight, float BPM, List<Pane> columns) {
+    public PlayHandler(double barHeight, double endHeight, float BPM, List<Pane> columns) {
         this.barHeight = barHeight;
         this.BPM = BPM;
         this.endHeight = endHeight;
@@ -46,9 +44,10 @@ public class FallHandler {
         AnimationTimer animator = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
-                if (prevBeat != (int)songPositionInBeats) {
+                // whenever song gets to a new beat, create a new beat imageView and insert into a random column.
+                if (prevBeat != (int) songPositionInBeats) {
                     Random rand = new Random();
-                    makeBeat(rand.nextInt((4-1)+1) + 1);
+                    makeBeat(rand.nextInt((4 - 1) + 1) + 1);
                     prevBeat = (int) songPositionInBeats;
                 }
             }
@@ -93,10 +92,14 @@ public class FallHandler {
             column.getChildren().add(beatIV);
         }
 
-        beats.add(beatIV);
+        if(beats.get(column)== null){
+            beats.put(column, new ArrayList<>(Arrays.asList(beatIV)));
+        }else{
+            beats.get(column).add(beatIV);
+        }
     }
 
-    public void fall() {
+    private void fall() {
         // make every beat fall.
 
         // the animator aims to hit 60 fps.
@@ -117,20 +120,31 @@ public class FallHandler {
         // which beat the song is currently at.
         songPositionInBeats = (songPosition / secPerBeat) / 1000;
 
-        List<ImageView> finishedBeats = new ArrayList<>();
-        for (ImageView beat : beats) {
-            // if the beat has reached the endHeight, remove it.
-            if (beat.getY() >= endHeight) {
-                beat.setOpacity(0);
-                finishedBeats.add(beat);
-            } else {
-                beat.setY(beat.getY() + BPM / 60f);
+        HashMap<Pane, ArrayList<ImageView>> finishedBeats = new HashMap<>();
+
+        for (Pane column : beats.keySet()) {
+            for (ImageView beat : beats.get(column)) {
+                // if the beat has reached the endHeight, remove it.
+                if (beat.getY() >= endHeight) {
+                    beat.setOpacity(0);
+
+                    // if the beat needs to be removed, add it to a list and remove them all at the end.
+                    if(finishedBeats.get(column)== null){
+                        finishedBeats.put(column, new ArrayList<>(Arrays.asList(beat)));
+                    }else{
+                        finishedBeats.get(column).add(beat);
+                    }
+                } else {
+                    beat.setY(beat.getY() + BPM / 60f);
+                }
             }
         }
 
-        for (ImageView beat : finishedBeats) {
-            beats.remove(beat);
-            System.out.println("removed");
+        for (Pane column : finishedBeats.keySet()) {
+            for (ImageView beat : finishedBeats.get(column)) {
+                beats.get(column).remove(beat);
+                column.getChildren().remove(beat);
+            }
         }
     }
 }

@@ -1,19 +1,11 @@
 package sample.Controllers;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.CacheHint;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import sample.FlyWeight.Beat;
-import sample.FlyWeight.BeatImpl;
-import sample.Handler.PlayScreen.FallHandler;
+import sample.Handler.PlayScreen.PlayHandler;
 import sample.songs.Song;
 
 import java.util.Arrays;
@@ -21,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayController {
     private Song song;
-    private FallHandler handler;
+    private PlayHandler handler;
 
     @FXML
     private Text score;
@@ -91,7 +83,7 @@ public class PlayController {
 
     private void startSong(){
         song.getPlayer().play();
-        FallHandler handler = new FallHandler(bar.getStartY(), firstCol.getHeight(), song.getBPM(),
+        PlayHandler handler = new PlayHandler(bar.getStartY(), firstCol.getHeight(), song.getBPM(),
                 Arrays.asList(firstCol, secondCol, thirdCol, fourthCol));
     }
 
