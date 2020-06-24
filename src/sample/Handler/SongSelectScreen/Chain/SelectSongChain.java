@@ -19,15 +19,13 @@ public abstract class SelectSongChain {
     public abstract void setNext(SelectSongChain next);
 
     void setPlayScreenVar(MouseEvent event, Song song) {
-//        cyx.getPlayer().play();
         SceneTransHandler handler = new SceneTransHandler();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         try {
-            handler.transition(stage, "/sample/Resources/fxml/playScreen.fxml");
+            handler.playScreenTransition(stage, "/sample/Resources/fxml/playScreen.fxml", song);
         } catch (Exception e) {
             e.printStackTrace();
         }
         ((Text)(stage.getScene().lookup("#songName"))).setText(song.getName());
-
     }
 }

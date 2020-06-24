@@ -11,6 +11,7 @@ public class Cyx implements Song{
     private final int duration = 240; // exactly 4 minutes somehow.
     private final String artist = "Atori";
     private final AudioClip player;
+    private float BPM = 93;
 
     public Cyx(){
         Media media = new Media("file:///C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/SongLib/Deadman.mp3".replaceAll(" ", "%20"));
@@ -31,5 +32,9 @@ public class Cyx implements Song{
 
     public AudioClip getPlayer() {
         return player;
+    }
+
+    public float getBPM() {
+        return BPM;
     }
 }

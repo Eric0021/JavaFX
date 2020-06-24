@@ -12,4 +12,6 @@ public interface Song {
 
     AudioClip getPlayer();
 
+    float getBPM();
+
 }
