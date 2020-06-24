@@ -1,9 +1,13 @@
 package sample.Handler.SongSelectScreen.Chain;
 
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import sample.Controllers.PlayController;
+import sample.Controllers.SongSelectController;
 import sample.Handler.SceneTransHandler;
 import sample.songs.Song;
 
@@ -24,5 +28,6 @@ public abstract class SelectSongChain {
             e.printStackTrace();
         }
         ((Text)(stage.getScene().lookup("#songName"))).setText(song.getName());
+
     }
 }
