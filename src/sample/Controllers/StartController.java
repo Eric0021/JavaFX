@@ -1,39 +1,35 @@
 package sample.Controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import sample.Handler.StartScreen.StartHandler;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
 
 public class StartController {
-    @FXML
-    private ResourceBundle resources;
+    private StartHandler startHandler = new StartHandler();
+
 
     @FXML
-    private URL location;
-
-    @FXML
-    void CreditAction(ActionEvent event) {
+    void creditClick(MouseEvent event) {
 
     }
 
     @FXML
-    void QuitAction(ActionEvent event) {
+    void quitClick(MouseEvent event) {
 
     }
 
     @FXML
-    void SettingsAction(ActionEvent event) {
+    void settingsClick(MouseEvent event) {
 
     }
 
     @FXML
-    void StartAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void initialize() {
+    void startClick(MouseEvent event) {
+        try{
+            startHandler.startClick(event);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
