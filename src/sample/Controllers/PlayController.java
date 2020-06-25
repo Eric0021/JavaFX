@@ -1,54 +1,67 @@
 package sample.Controllers;
 
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import sample.Handler.PlayScreen.CountdownHandler;
+import sample.Handler.PlayScreen.KeyPressHandler;
 import sample.Handler.PlayScreen.PlayHandler;
 import sample.songs.Song;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 public class PlayController {
     private Song song;
-    private PlayHandler handler;
+    private double beatWidth;
+    private double beatHeight;
+    private KeyPressHandler keyHandler;
 
     @FXML
     private Text score;
 
     @FXML
     private Pane firstCol;
-
     @FXML
     private Pane secondCol;
-
     @FXML
     private Pane thirdCol;
-
     @FXML
     private Pane fourthCol;
 
     @FXML
-    private Text rating;
+    private ImageView ratingIV;
 
     @FXML
     private Text countDown;
 
     @FXML
-    private Line bar;
+    private Button button1;
+    @FXML
+    private Button button2;
+    @FXML
+    private Button button3;
+    @FXML
+    private Button button4;
 
     @FXML
     void initialize() {
         startGame();
     }
 
-    private void startGame(){
-        // first count down, then spawn beats.
-        Task<Void> task = new Task<>(){
+    private void startGame() {
+        setBeatDim();
+
+        // first count down, then start the song.
+        Task<Void> task = new Task<>() {
             @Override
-            public Void call(){
+            public Void call() {
                 countDown();
                 return null;
             }
@@ -58,36 +71,33 @@ public class PlayController {
         new Thread(task).start();
     }
 
-    private void countDown() {
-        // count down from 3 to start the game.
-
-        countDown.setOpacity(1);
-        countDown.setText("READY");
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // count down from 3
-        for (int i = 3; i > 0; i--) {
-            countDown.setText(Integer.toString(i));
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        countDown.setOpacity(0);
+    private void setBeatDim(){
+        beatWidth = button1.getPrefWidth();
+        beatHeight = button1.getPrefHeight();
     }
 
-    private void startSong(){
+    private void countDown() {
+        CountdownHandler countDownHandler = new CountdownHandler();
+        countDownHandler.countdown(countDown);
+    }
+
+    private void startSong() {
         song.getPlayer().play();
-        PlayHandler handler = new PlayHandler(bar.getStartY(), firstCol.getHeight(), song.getBPM(),
-                Arrays.asList(firstCol, secondCol, thirdCol, fourthCol));
+        PlayHandler playHandler = new PlayHandler(firstCol.getHeight(), song.getBPM(),
+                Arrays.asList(firstCol, secondCol, thirdCol, fourthCol), beatWidth, beatHeight);
+
+        System.out.println(ratingIV.getImage());
+
+        keyHandler = new KeyPressHandler(ratingIV, beatHeight/2,
+                button1, button2, button3, button4);
     }
 
     public void setSong(Song song) {
         this.song = song;
+    }
+
+    @FXML
+    void buttonPress(ActionEvent event) {
+        keyHandler.keyPress(event);
     }
 }

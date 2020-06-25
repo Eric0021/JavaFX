@@ -25,7 +25,6 @@ public class SceneTransHandler {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent playScreen = (Parent)fxmlLoader.load();
 
-
         PlayController controller = fxmlLoader.<PlayController>getController();
         controller.setSong(song);
 

@@ -1,4 +1,4 @@
-package sample.FlyWeight;
+package sample.FlyWeight.Beat;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -6,27 +6,23 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 public class BeatValueObject implements Beat{
-    private final String beatImage;
-    private final ImageView beatImageView;
+    // The image is cached, but each beat is a new imageView.
+
+    private final Image beatImage;
     private final String colour;
 
     public BeatValueObject(String beatImage, String colour) {
-        this.beatImage = beatImage;
         this.colour = colour;
 
-        this.beatImageView =  new ImageView(new Image(beatImage));
+        this.beatImage =  new Image(beatImage);
     }
 
     public ImageView getBeatImageView() {
-        return beatImageView;
+        return new ImageView(beatImage);
     }
 
     public String getColour() {
         return colour;
-    }
-
-    public String getBeatImage(){
-        return this.beatImage;
     }
 
     @Override
@@ -35,12 +31,11 @@ public class BeatValueObject implements Beat{
         if (o == null || getClass() != o.getClass()) return false;
         BeatValueObject that = (BeatValueObject) o;
         return Objects.equals(beatImage, that.beatImage) &&
-                Objects.equals(beatImageView, that.beatImageView) &&
                 Objects.equals(colour, that.colour);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(beatImage, beatImageView, colour);
+        return Objects.hash(beatImage, colour);
     }
 }

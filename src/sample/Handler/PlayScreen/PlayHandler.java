@@ -1,18 +1,15 @@
 package sample.Handler.PlayScreen;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.CacheHint;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import sample.FlyWeight.Beat;
-import sample.FlyWeight.BeatImpl;
+import sample.FlyWeight.Beat.Beat;
+import sample.FlyWeight.Beat.BeatImpl;
 
 import java.util.*;
 
 public class PlayHandler {
-    private double barHeight;
     private double endHeight;
     private float BPM;
 
@@ -25,13 +22,17 @@ public class PlayHandler {
     private float secPerBeat;
 
     private List<Pane> columns;
-    int prevBeat = 0;
+    private int prevBeat = 0;
 
-    public PlayHandler(double barHeight, double endHeight, float BPM, List<Pane> columns) {
-        this.barHeight = barHeight;
+    private double beatWidth;
+    private double beatHeight ;
+
+    public PlayHandler(double endHeight, float BPM, List<Pane> columns, double beatWidth, double beatHeight) {
         this.BPM = BPM;
         this.endHeight = endHeight;
         this.columns = columns;
+        this.beatWidth = beatWidth;
+        this.beatHeight = beatHeight;
 
         secPerBeat = 60f / BPM;
         startTime = System.currentTimeMillis();
@@ -47,6 +48,7 @@ public class PlayHandler {
                 // whenever song gets to a new beat, create a new beat imageView and insert into a random column.
                 if (prevBeat != (int) songPositionInBeats) {
                     Random rand = new Random();
+                    // bound between 1 and 4, inclusive.
                     makeBeat(rand.nextInt((4 - 1) + 1) + 1);
                     prevBeat = (int) songPositionInBeats;
                 }
@@ -68,8 +70,8 @@ public class PlayHandler {
         beatIV.setCacheHint(CacheHint.SPEED);
         beatIV.setY(0);
         beatIV.setX(2);
-        beatIV.setFitWidth(221);
-        beatIV.setFitHeight(48);
+        beatIV.setFitWidth(beatWidth);
+        beatIV.setFitHeight(beatHeight);
 
         Pane column = null;
         switch (col_num) {
@@ -125,7 +127,7 @@ public class PlayHandler {
         for (Pane column : beats.keySet()) {
             for (ImageView beat : beats.get(column)) {
                 // if the beat has reached the endHeight, remove it.
-                if (beat.getY() >= endHeight) {
+                if (beat.getY() >= endHeight || beat.getOpacity()==0) {
                     beat.setOpacity(0);
 
                     // if the beat needs to be removed, add it to a list and remove them all at the end.
@@ -143,6 +145,8 @@ public class PlayHandler {
         for (Pane column : finishedBeats.keySet()) {
             for (ImageView beat : finishedBeats.get(column)) {
                 beats.get(column).remove(beat);
+
+                // remove the imageView from the column as well.
                 column.getChildren().remove(beat);
             }
         }

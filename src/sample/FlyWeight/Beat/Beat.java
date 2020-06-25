@@ -1,4 +1,4 @@
-package sample.FlyWeight;
+package sample.FlyWeight.Beat;
 
 import javafx.scene.image.ImageView;
 

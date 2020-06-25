@@ -1,15 +1,14 @@
-package sample.FlyWeight;
+package sample.FlyWeight.Beat;
 
 import javafx.scene.image.ImageView;
 
 // Uses the value object factory to retrieve its own ImageView.
 public class BeatImpl implements Beat{
-    private BeatFactory factory = new BeatFactory();
     private final String colour;
 
     public BeatImpl(String colour, String beatImage){
         this.colour = colour;
-        factory.addBeat(colour, beatImage);
+        BeatFactory.addBeat(colour, beatImage);
     }
 
     public String getColour(){
@@ -17,6 +16,6 @@ public class BeatImpl implements Beat{
     }
 
     public ImageView getBeatImageView(){
-        return factory.getImageView(this.colour);
+        return BeatFactory.getImageView(this.colour);
     }
 }
