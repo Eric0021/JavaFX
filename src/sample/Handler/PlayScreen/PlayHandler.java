@@ -12,6 +12,7 @@ import java.util.*;
 public class PlayHandler {
     private double endHeight;
     private float BPM;
+    private int speedMultiplier = 2;
 
     // all existing beats
     private HashMap<Pane, List<ImageView>> beats = new HashMap<>();
@@ -137,7 +138,7 @@ public class PlayHandler {
                         finishedBeats.get(column).add(beat);
                     }
                 } else {
-                    beat.setY(beat.getY() + BPM / 60f);
+                    beat.setY(beat.getY() + (BPM / 60f)*speedMultiplier);
                 }
             }
         }

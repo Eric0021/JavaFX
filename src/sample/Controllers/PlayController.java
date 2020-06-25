@@ -51,6 +51,9 @@ public class PlayController {
     private Button button4;
 
     @FXML
+    private Text combo;
+
+    @FXML
     void initialize() {
         startGame();
     }
@@ -86,9 +89,7 @@ public class PlayController {
         PlayHandler playHandler = new PlayHandler(firstCol.getHeight(), song.getBPM(),
                 Arrays.asList(firstCol, secondCol, thirdCol, fourthCol), beatWidth, beatHeight);
 
-        System.out.println(ratingIV.getImage());
-
-        keyHandler = new KeyPressHandler(ratingIV, beatHeight/2,
+        keyHandler = new KeyPressHandler(ratingIV, score, combo,beatHeight/2,
                 button1, button2, button3, button4);
     }
 

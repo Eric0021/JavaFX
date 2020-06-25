@@ -1,22 +1,33 @@
 package sample.Handler.PlayScreen;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import sample.FlyWeight.Rating.Rating;
-import sample.FlyWeight.Rating.RatingImpl;
+import sample.Handler.PlayScreen.RatingStrategy.RatingEnum;
+import sample.Handler.PlayScreen.RatingStrategy.StrategyHandler;
 
 public class ScoreHandler {
     private double barHeight;
     private ImageView ratingIV;
     private double beatCentreY;
     private double accuracyTolerance = 10;
+    private Text score;
+    private Text combo;
+    private StrategyHandler strategyHandler;
 
-    public ScoreHandler(ImageView ratingIV, double beatCentreY, double barHeight) {
+    public ScoreHandler(ImageView ratingIV, Text score, Text combo, double beatCentreY, double barHeight) {
         this.ratingIV = ratingIV;
+        this.combo = combo;
         this.beatCentreY = beatCentreY;
         this.barHeight = barHeight;
+        this.score = score;
+
+        strategyHandler = new StrategyHandler(10, 5, 1);
     }
 
     public void setRating(){
+        combo.setOpacity(1);
+
         // how much the key press was off from the bar height
         double accurateOffset = beatCentreY - barHeight;
 
@@ -26,25 +37,15 @@ public class ScoreHandler {
 
         System.out.println("accuracy: "+accuracy);
 
-        Rating rating;
         switch(Math.abs(accuracy)){
             case 0:
-                rating = new RatingImpl("perfect", "/sample/Resources/Images/perfect.png");
-                ratingIV.setImage(rating.getRatingIV().getImage());
-                ratingIV.setOpacity(1);
-                System.out.println("perfect");
-                System.out.println(ratingIV.getImage());
+                strategyHandler.handle(RatingEnum.PERFECT, ratingIV, combo, score);
                 break;
             case 1:
-                rating = new RatingImpl("Good", "/sample/Resources/Images/good.png");
-                ratingIV.setImage(rating.getRatingIV().getImage());
-                ratingIV.setOpacity(1);
+                strategyHandler.handle(RatingEnum.GOOD, ratingIV, combo, score);
                 break;
             default:
-                rating = new RatingImpl("Bad", "/sample/Resources/Images/bad.png");
-                ratingIV.setImage(rating.getRatingIV().getImage());
-                ratingIV.setOpacity(1);
-                System.out.println("bad");
+                strategyHandler.handle(RatingEnum.BAD, ratingIV, combo, score);
                 break;
         }
     }

@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 public class KeyPressHandler {
     private ImageView ratingIV;
@@ -23,9 +24,17 @@ public class KeyPressHandler {
     @FXML
     private Button button4;
 
-    public KeyPressHandler(ImageView ratingIV, double beatHalfHeight,
+    @FXML
+    private Text score;
+
+    @FXML
+    private Text combo;
+
+    public KeyPressHandler(ImageView ratingIV, Text score, Text combo, double beatHalfHeight,
                            Button button1, Button button2, Button button3, Button button4) {
         this.ratingIV = ratingIV;
+        this.score = score;
+        this.combo = combo;
         this.beatHalfHeight = beatHalfHeight;
         this.button1 = button1;
         this.button2 = button2;
@@ -84,7 +93,7 @@ public class KeyPressHandler {
         if (closest != null) {
             closest.setOpacity(0);
             // Beat's centre Y coordinate is used to determine accuracy. -> beat half height + beat's Y coordinate.
-            ScoreHandler handler = new ScoreHandler(ratingIV, (beatHalfHeight+closest.getY()), button.getLayoutY());
+            ScoreHandler handler = new ScoreHandler(ratingIV, score, combo, (beatHalfHeight+closest.getY()), button.getLayoutY());
             handler.setRating();
         }
     }
