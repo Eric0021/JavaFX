@@ -54,9 +54,9 @@ public class KeyPressHandler {
             button1.fire();
         } else if (ev.getCode() == KeyCode.F) {
             button2.fire();
-        } else if (ev.getCode() == KeyCode.G) {
+        } else if (ev.getCode() == KeyCode.J) {
             button3.fire();
-        } else if (ev.getCode() == KeyCode.H) {
+        } else if (ev.getCode() == KeyCode.K) {
             button4.fire();
         }
         ev.consume();

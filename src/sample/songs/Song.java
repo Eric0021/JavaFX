@@ -10,8 +10,10 @@ public interface Song {
 
     String getArtist();
 
-    AudioClip getPlayer();
+    MediaPlayer getPlayer();
 
     float getBPM();
+
+    double getOffSet();
 
 }

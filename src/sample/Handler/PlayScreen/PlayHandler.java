@@ -6,52 +6,81 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import sample.FlyWeight.Beat.Beat;
 import sample.FlyWeight.Beat.BeatImpl;
+import sample.Handler.MidiParseHandler;
+import sample.songs.Song;
 
 import java.util.*;
 
 public class PlayHandler {
     private double endHeight;
-    private float BPM;
-    private int speedMultiplier = 2;
+    private Song song;
+    private double speedMultiplier = 0.7;
 
     // all existing beats
     private HashMap<Pane, List<ImageView>> beats = new HashMap<>();
 
-    private float songPosition;
-    private float songPositionInBeats;
-    private long startTime;
-    private float secPerBeat;
+    private double songPositionInBeats;
+    private double secPerBeat;
+    double songPosition;
 
     private List<Pane> columns;
     private int prevBeat = 0;
 
     private double beatWidth;
-    private double beatHeight ;
+    private double beatHeight;
 
-    public PlayHandler(double endHeight, float BPM, List<Pane> columns, double beatWidth, double beatHeight) {
-        this.BPM = BPM;
+    private MidiParseHandler parser = new MidiParseHandler();
+    private TreeMap<Double, List<String>> notes;
+
+    private double nextNoteBeat;
+    private double startingTime;
+    private double offsetTime = 0;
+
+    public PlayHandler(double endHeight, Song song, List<Pane> columns, double beatWidth, double beatHeight) {
+        this.song = song;
         this.endHeight = endHeight;
         this.columns = columns;
         this.beatWidth = beatWidth;
         this.beatHeight = beatHeight;
 
-        secPerBeat = 60f / BPM;
-        startTime = System.currentTimeMillis();
+        notes = parser.parse("C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/Midi/New folder/data.csv");
+        nextNoteBeat = notes.firstKey();
 
+        secPerBeat = 60f / song.getBPM();
+
+        startingTime = System.currentTimeMillis();
         fall();
         spawnBeats();
+
+        Thread thread = new Thread(this::play);
+        thread.start();
+    }
+
+    private void play(){
+        try {
+            long delay = (long)(secPerBeat*4*(1/speedMultiplier)*1000);
+            System.out.println(delay);
+            Thread.sleep(delay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        song.getPlayer().play();
     }
 
     private void spawnBeats() {
         AnimationTimer animator = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
-                // whenever song gets to a new beat, create a new beat imageView and insert into a random column.
-                if (prevBeat != (int) songPositionInBeats) {
+                // whenever the current beat reaches/passes the beat to spawn the next notes, spawn those notes.
+                if (songPositionInBeats >= nextNoteBeat) {
+                    nextNoteBeat = notes.higherKey(nextNoteBeat);
+                    List<String> notesOnbeat = notes.get(nextNoteBeat);
+
                     Random rand = new Random();
                     // bound between 1 and 4, inclusive.
                     makeBeat(rand.nextInt((4 - 1) + 1) + 1);
-                    prevBeat = (int) songPositionInBeats;
+
+//                    System.out.println("spawning notes at beat: "+nextNoteBeat);
                 }
             }
         };
@@ -95,9 +124,9 @@ public class PlayHandler {
             column.getChildren().add(beatIV);
         }
 
-        if(beats.get(column)== null){
+        if (beats.get(column) == null) {
             beats.put(column, new ArrayList<>(Arrays.asList(beatIV)));
-        }else{
+        } else {
             beats.get(column).add(beatIV);
         }
     }
@@ -117,28 +146,33 @@ public class PlayHandler {
     }
 
     private void update_beats() {
-        // how many seconds since song has started.
-        songPosition = System.currentTimeMillis() - startTime;
+        // how many seconds since song has started, adjusting for offset (offset is in seconds).
+        double songPosition = song.getPlayer().getCurrentTime().toMillis() - song.getOffSet() * 1000;
 
         // which beat the song is currently at.
-        songPositionInBeats = (songPosition / secPerBeat) / 1000;
+        if(song.getPlayer().getCurrentTime().toSeconds()==0){
+            offsetTime= System.currentTimeMillis() - startingTime;
+        }
+
+        songPositionInBeats = ((songPosition+offsetTime) / secPerBeat) / 1000;
+//        System.out.println(songPositionInBeats);
 
         HashMap<Pane, ArrayList<ImageView>> finishedBeats = new HashMap<>();
 
         for (Pane column : beats.keySet()) {
             for (ImageView beat : beats.get(column)) {
                 // if the beat has reached the endHeight, remove it.
-                if (beat.getY() >= endHeight || beat.getOpacity()==0) {
+                if (beat.getY() >= endHeight || beat.getOpacity() == 0) {
                     beat.setOpacity(0);
 
                     // if the beat needs to be removed, add it to a list and remove them all at the end.
-                    if(finishedBeats.get(column)== null){
+                    if (finishedBeats.get(column) == null) {
                         finishedBeats.put(column, new ArrayList<>(Arrays.asList(beat)));
-                    }else{
+                    } else {
                         finishedBeats.get(column).add(beat);
                     }
                 } else {
-                    beat.setY(beat.getY() + (BPM / 60f)*speedMultiplier);
+                    beat.setY(beat.getY() + (766/(4*secPerBeat)/60)*(speedMultiplier));
                 }
             }
         }

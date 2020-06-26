@@ -10,12 +10,13 @@ public class Straits implements Song{
     private final String name = "Straits";
     private final int duration = 240; // exactly 4 minutes somehow.
     private final String artist = "Atori";
-    private final AudioClip player;
+    private final MediaPlayer player;
     private float BPM = 93;
+    private double offset = 0;
 
     public Straits(){
         Media media = new Media("file:///C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/SongLib/Deadman.mp3".replaceAll(" ", "%20"));
-        player = new AudioClip(media.getSource());
+        player = new MediaPlayer(media);
     }
 
     public String getName() {
@@ -30,11 +31,16 @@ public class Straits implements Song{
         return artist;
     }
 
-    public AudioClip getPlayer() {
+    public MediaPlayer getPlayer() {
         return player;
     }
 
     public float getBPM() {
         return BPM;
+    }
+
+    @Override
+    public double getOffSet() {
+        return this.offset;
     }
 }

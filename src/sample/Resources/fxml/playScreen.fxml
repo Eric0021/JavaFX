@@ -51,7 +51,7 @@
                               <Image url="@../Images/column1.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button1" layoutX="5.0" layoutY="766.0" mnemonicParsing="false" onAction="#buttonPress" prefHeight="44.0" prefWidth="221.0" text="Button" />
+                        <Button fx:id="button1" layoutX="5.0" layoutY="766.0" mnemonicParsing="false" onAction="#buttonPress" opacity="0.0" prefHeight="44.0" prefWidth="221.0" text="Button" />
                      </children>
                   </Pane>
                   <Pane fx:id="secondCol" cache="true" cacheHint="SPEED" prefHeight="200.0" prefWidth="230.0">
@@ -61,7 +61,7 @@
                               <Image url="@../Images/column1.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button2" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" prefHeight="44.0" prefWidth="221.0" text="Button" />
+                        <Button fx:id="button2" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" opacity="0.0" prefHeight="44.0" prefWidth="221.0" text="Button" />
                      </children>
                   </Pane>
                   <Pane fx:id="thirdCol" cache="true" cacheHint="SPEED" prefHeight="200.0" prefWidth="230.0">
@@ -71,7 +71,7 @@
                               <Image url="@../Images/column1.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button3" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" prefHeight="44.0" prefWidth="221.0" text="Button" />
+                        <Button fx:id="button3" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" opacity="0.0" prefHeight="44.0" prefWidth="221.0" text="Button" />
                      </children>
                   </Pane>
                   <Pane fx:id="fourthCol" cache="true" cacheHint="SPEED" prefHeight="200.0" prefWidth="230.0">
@@ -81,7 +81,7 @@
                               <Image url="@../Images/column1.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="button4" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" prefHeight="44.0" prefWidth="221.0" text="Button" />
+                        <Button fx:id="button4" layoutX="5.0" layoutY="767.0" mnemonicParsing="false" onAction="#buttonPress" opacity="0.0" prefHeight="44.0" prefWidth="221.0" text="Button" />
                      </children>
                   </Pane>
                </children>

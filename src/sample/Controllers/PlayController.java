@@ -5,9 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import sample.Handler.PlayScreen.CountdownHandler;
@@ -85,8 +82,7 @@ public class PlayController {
     }
 
     private void startSong() {
-        song.getPlayer().play();
-        PlayHandler playHandler = new PlayHandler(firstCol.getHeight(), song.getBPM(),
+        new PlayHandler(firstCol.getHeight(), song,
                 Arrays.asList(firstCol, secondCol, thirdCol, fourthCol), beatWidth, beatHeight);
 
         keyHandler = new KeyPressHandler(ratingIV, score, combo,beatHeight/2,

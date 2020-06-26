@@ -2,7 +2,6 @@ package sample.Handler.PlayScreen;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import sample.FlyWeight.Rating.Rating;
 import sample.Handler.PlayScreen.RatingStrategy.RatingEnum;
 import sample.Handler.PlayScreen.RatingStrategy.StrategyHandler;
 
@@ -10,7 +9,7 @@ public class ScoreHandler {
     private double barHeight;
     private ImageView ratingIV;
     private double beatCentreY;
-    private double accuracyTolerance = 10;
+    private double accuracyTolerance = 14;
     private Text score;
     private Text combo;
     private StrategyHandler strategyHandler;
@@ -31,11 +30,7 @@ public class ScoreHandler {
         // how much the key press was off from the bar height
         double accurateOffset = beatCentreY - barHeight;
 
-        System.out.println("accurateOS: "+accurateOffset);
-
         int accuracy = (int)(accurateOffset/accuracyTolerance);
-
-        System.out.println("accuracy: "+accuracy);
 
         switch(Math.abs(accuracy)){
             case 0:
