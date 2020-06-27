@@ -2,10 +2,17 @@ package sample.Handler.PlayScreen;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.CacheHint;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import sample.FlyWeight.Beat.Beat;
 import sample.FlyWeight.Beat.BeatImpl;
+import sample.FlyWeight.Notes.Note;
+import sample.FlyWeight.Notes.NoteImpl;
+import sample.FlyWeight.Notes.NoteTranslator;
 import sample.Handler.MidiParseHandler;
 import sample.songs.Song;
 
@@ -17,14 +24,14 @@ public class PlayHandler {
     private double speedMultiplier = 0.7;
 
     // all existing beats
+    private HashMap<Pane, List<StackPane>> beatSPs = new HashMap<>();
     private HashMap<Pane, List<ImageView>> beats = new HashMap<>();
+    private HashMap<Pane, List<Text>> noteTexts = new HashMap<>();
 
     private double songPositionInBeats;
     private double secPerBeat;
-    double songPosition;
 
     private List<Pane> columns;
-    private int prevBeat = 0;
 
     private double beatWidth;
     private double beatHeight;
@@ -57,7 +64,9 @@ public class PlayHandler {
     }
 
     private void play(){
+        // play the song at a delay, so that beats spawn first.
         try {
+            // *4 for 4 quarter beats.
             long delay = (long)(secPerBeat*4*(1/speedMultiplier)*1000);
             System.out.println(delay);
             Thread.sleep(delay);
@@ -78,9 +87,7 @@ public class PlayHandler {
 
                     Random rand = new Random();
                     // bound between 1 and 4, inclusive.
-                    makeBeat(rand.nextInt((4 - 1) + 1) + 1);
-
-//                    System.out.println("spawning notes at beat: "+nextNoteBeat);
+                    makeBeat(rand.nextInt((4 - 1) + 1) + 1, notesOnbeat);
                 }
             }
         };
@@ -88,47 +95,70 @@ public class PlayHandler {
         animator.start();
     }
 
-    private void makeBeat(int col_num) {
-        // col_num needs to be 1 - 4.
-        if (col_num > 4 || col_num < 1) {
+    private void makeBeat(int colNum, List<String> notes) {
+        // colNum needs to be 1 - 4.
+        if (colNum > 4 || colNum < 1) {
             return;
         }
 
+        StackPane beatSP = new StackPane();
+        makeAndSetIV(beatSP);
+        makeAndSetText(notes, beatSP);
+
+        Pane column = getColumn(colNum);
+        if (column != null) {
+            column.getChildren().add(beatSP);
+
+            if(beatSPs.get(column)==null){
+                beatSPs.put(column, new ArrayList<>(Arrays.asList(beatSP)));
+            }else{
+                beatSPs.get(column).add(beatSP);
+            }
+        }
+    }
+
+    private Pane getColumn(int colNum){
+        switch (colNum) {
+            case 1:
+                return columns.get(0);
+            case 2:
+                return columns.get(1);
+            case 3:
+                return columns.get(2);
+            case 4:
+                return columns.get(3);
+            default:
+                return null;
+        }
+    }
+
+    private void makeAndSetText(List<String> notes, StackPane stackPane){
+        int count = 0;
+        String noteStringFull = "";
+        for(String noteString : notes){
+            if(count !=0){
+                noteStringFull=noteStringFull.concat("+");
+            }
+            noteStringFull = noteStringFull.concat(NoteTranslator.translate(noteString));
+            count++;
+        }
+        Text noteText = new Text(noteStringFull);
+        stackPane.getChildren().add(noteText);
+
+        int centreX = 17;
+        noteText.setTranslateX(centreX-count*10);
+        noteText.setFill(Paint.valueOf("white"));
+    }
+
+    private void makeAndSetIV(StackPane stackPane){
         Beat beat = new BeatImpl("yellow", "/sample/Resources/Images/beat.png");
         ImageView beatIV = beat.getBeatImageView();
         beatIV.setCache(true);
         beatIV.setCacheHint(CacheHint.SPEED);
-        beatIV.setY(0);
-        beatIV.setX(2);
         beatIV.setFitWidth(beatWidth);
         beatIV.setFitHeight(beatHeight);
 
-        Pane column = null;
-        switch (col_num) {
-            case 1:
-                column = columns.get(0);
-                break;
-            case 2:
-                column = columns.get(1);
-                break;
-            case 3:
-                column = columns.get(2);
-                break;
-            case 4:
-                column = columns.get(3);
-                break;
-            default:
-                break;
-        }
-        if (column != null) {
-            column.getChildren().add(beatIV);
-        }
-
-        if (beats.get(column) == null) {
-            beats.put(column, new ArrayList<>(Arrays.asList(beatIV)));
-        } else {
-            beats.get(column).add(beatIV);
-        }
+        stackPane.getChildren().add(beatIV);
     }
 
     private void fall() {
@@ -155,14 +185,12 @@ public class PlayHandler {
         }
 
         songPositionInBeats = ((songPosition+offsetTime) / secPerBeat) / 1000;
-//        System.out.println(songPositionInBeats);
 
-        HashMap<Pane, ArrayList<ImageView>> finishedBeats = new HashMap<>();
-
-        for (Pane column : beats.keySet()) {
-            for (ImageView beat : beats.get(column)) {
+        HashMap<Pane, ArrayList<StackPane>> finishedBeats = new HashMap<>();
+        for (Pane column : beatSPs.keySet()) {
+            for (StackPane beat : beatSPs.get(column)) {
                 // if the beat has reached the endHeight, remove it.
-                if (beat.getY() >= endHeight || beat.getOpacity() == 0) {
+                if (beat.getLayoutY() >= endHeight || beat.getOpacity() == 0) {
                     beat.setOpacity(0);
 
                     // if the beat needs to be removed, add it to a list and remove them all at the end.
@@ -172,14 +200,14 @@ public class PlayHandler {
                         finishedBeats.get(column).add(beat);
                     }
                 } else {
-                    beat.setY(beat.getY() + (766/(4*secPerBeat)/60)*(speedMultiplier));
+                    beat.setLayoutY(beat.getLayoutY() + (766/(4*secPerBeat)/60)*(speedMultiplier));
                 }
             }
         }
 
         for (Pane column : finishedBeats.keySet()) {
-            for (ImageView beat : finishedBeats.get(column)) {
-                beats.get(column).remove(beat);
+            for (StackPane beat : finishedBeats.get(column)) {
+                beatSPs.get(column).remove(beat);
 
                 // remove the imageView from the column as well.
                 column.getChildren().remove(beat);

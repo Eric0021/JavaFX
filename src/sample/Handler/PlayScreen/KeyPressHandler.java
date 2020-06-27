@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class KeyPressHandler {
@@ -72,16 +73,16 @@ public class KeyPressHandler {
         // find the beat that is the closest to the bar in terms of height.
         // only count those not past the miss height.
         int closestY = Integer.MAX_VALUE;
-        ImageView closest = null;
+        StackPane closest = null;
         for (Node node : column.getChildren()) {
-            if (!(node instanceof ImageView) || !(node.getId() == null)) {
-                // should only get beats.
+            if (!(node instanceof StackPane) || !(node.getId() == null)) {
+                // should only get beats and text.
                 continue;
             }
-            ImageView beat = (ImageView) node;
-            int distance = (int) Math.abs(button.getLayoutY() - beat.getY());
+            StackPane beat = (StackPane) node;
+            int distance = (int) Math.abs(button.getLayoutY() - beat.getLayoutY());
             if (distance < closestY) {
-                if (beat.getY() < missHeight) {
+                if (beat.getLayoutY() < missHeight) {
                     // if above the miss height
 
                     closest = beat;
@@ -93,7 +94,7 @@ public class KeyPressHandler {
         if (closest != null) {
             closest.setOpacity(0);
             // Beat's centre Y coordinate is used to determine accuracy. -> beat half height + beat's Y coordinate.
-            ScoreHandler handler = new ScoreHandler(ratingIV, score, combo, (beatHalfHeight+closest.getY()), button.getLayoutY());
+            ScoreHandler handler = new ScoreHandler(ratingIV, score, combo, (beatHalfHeight+closest.getLayoutY()), button.getLayoutY());
             handler.setRating();
         }
     }
