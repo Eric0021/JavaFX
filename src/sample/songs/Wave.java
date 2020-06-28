@@ -3,8 +3,10 @@ package sample.songs;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
+
 public class Wave implements Song{
-    private final String name = "Wave";
+    private final String name = "GiornoReal";
     private final int duration = 295;
     private final String artist = "Atori";
     private final MediaPlayer player;
@@ -12,7 +14,9 @@ public class Wave implements Song{
     private double offset = 0.14;
 
     public Wave(){
-        Media media = new Media("file:///C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/SongLib/GiornoSolo.mp3".replaceAll(" ", "%20"));
+        String songPath = new File("src/sample/Resources/SongLib/GiornoSolo.mp3").getAbsolutePath();
+        songPath = songPath.replace("\\","/");
+        Media media = new Media("file:///"+songPath.replaceAll(" ", "%20"));
         player = new MediaPlayer(media);
     }
 

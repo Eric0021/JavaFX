@@ -16,7 +16,9 @@ public class Cyx implements Song{
     private double offset = -0.1;
 
     public Cyx(){
-        Media media = new Media("file:///C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/SongLib/Deadman.mp3".replaceAll(" ", "%20"));
+        String songPath = new File("src/sample/Resources/SongLib/Deadman.mp3").getAbsolutePath();
+        songPath = songPath.replace("\\","/");
+        Media media = new Media("file:///"+songPath.replaceAll(" ", "%20"));
         player = new MediaPlayer(media);
     }
 

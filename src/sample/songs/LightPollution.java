@@ -7,15 +7,18 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 
 public class LightPollution implements Song{
-    private final String name = "LightPollution";
+    private final String name = "SecretGardenTest";
     private final int duration = 240; // exactly 4 minutes somehow.
     private final String artist = "Atori";
     private final MediaPlayer player;
-    private float BPM = 93;
-    private double offset = 0;
+    private float BPM = 55;
+    // offset in seconds.
+    private double offset = 0.25;
 
     public LightPollution(){
-        Media media = new Media("file:///C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/SongLib/Deadman.mp3".replaceAll(" ", "%20"));
+        String songPath = new File("src/sample/Resources/SongLib/"+name+".mp3").getAbsolutePath();
+        songPath = songPath.replace("\\","/");
+        Media media = new Media("file:///"+songPath.replaceAll(" ", "%20"));
         player = new MediaPlayer(media);
     }
 

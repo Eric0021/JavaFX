@@ -25,8 +25,6 @@ public class PlayHandler {
 
     // all existing beats
     private HashMap<Pane, List<StackPane>> beatSPs = new HashMap<>();
-    private HashMap<Pane, List<ImageView>> beats = new HashMap<>();
-    private HashMap<Pane, List<Text>> noteTexts = new HashMap<>();
 
     private double songPositionInBeats;
     private double secPerBeat;
@@ -36,21 +34,21 @@ public class PlayHandler {
     private double beatWidth;
     private double beatHeight;
 
-    private MidiParseHandler parser = new MidiParseHandler();
     private TreeMap<Double, List<String>> notes;
 
     private double nextNoteBeat;
     private double startingTime;
     private double offsetTime = 0;
 
-    public PlayHandler(double endHeight, Song song, List<Pane> columns, double beatWidth, double beatHeight) {
+    public PlayHandler(double endHeight, Song song, TreeMap<Double, List<String>> notes,
+                       List<Pane> columns, double beatWidth, double beatHeight) {
         this.song = song;
         this.endHeight = endHeight;
         this.columns = columns;
         this.beatWidth = beatWidth;
         this.beatHeight = beatHeight;
 
-        notes = parser.parse("C:/Users/eric/Documents/sem 4/SOFT3202/untitled/src/sample/Resources/Midi/New folder/data.csv");
+        this.notes = notes;
         nextNoteBeat = notes.firstKey();
 
         secPerBeat = 60f / song.getBPM();
@@ -63,12 +61,11 @@ public class PlayHandler {
         thread.start();
     }
 
-    private void play(){
+    private void play() {
         // play the song at a delay, so that beats spawn first.
         try {
             // *4 for 4 quarter beats.
-            long delay = (long)(secPerBeat*4*(1/speedMultiplier)*1000);
-            System.out.println(delay);
+            long delay = (long) (secPerBeat * 4 * (1 / speedMultiplier) * 1000);
             Thread.sleep(delay);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,12 +79,13 @@ public class PlayHandler {
             public void handle(long arg0) {
                 // whenever the current beat reaches/passes the beat to spawn the next notes, spawn those notes.
                 if (songPositionInBeats >= nextNoteBeat) {
-                    nextNoteBeat = notes.higherKey(nextNoteBeat);
                     List<String> notesOnbeat = notes.get(nextNoteBeat);
 
                     Random rand = new Random();
                     // bound between 1 and 4, inclusive.
                     makeBeat(rand.nextInt((4 - 1) + 1) + 1, notesOnbeat);
+
+                    nextNoteBeat = notes.higherKey(nextNoteBeat);
                 }
             }
         };
@@ -109,15 +107,15 @@ public class PlayHandler {
         if (column != null) {
             column.getChildren().add(beatSP);
 
-            if(beatSPs.get(column)==null){
+            if (beatSPs.get(column) == null) {
                 beatSPs.put(column, new ArrayList<>(Arrays.asList(beatSP)));
-            }else{
+            } else {
                 beatSPs.get(column).add(beatSP);
             }
         }
     }
 
-    private Pane getColumn(int colNum){
+    private Pane getColumn(int colNum) {
         switch (colNum) {
             case 1:
                 return columns.get(0);
@@ -132,12 +130,12 @@ public class PlayHandler {
         }
     }
 
-    private void makeAndSetText(List<String> notes, StackPane stackPane){
+    private void makeAndSetText(List<String> notes, StackPane stackPane) {
         int count = 0;
         String noteStringFull = "";
-        for(String noteString : notes){
-            if(count !=0){
-                noteStringFull=noteStringFull.concat("+");
+        for (String noteString : notes) {
+            if (count != 0) {
+                noteStringFull = noteStringFull.concat("+");
             }
             noteStringFull = noteStringFull.concat(NoteTranslator.translate(noteString));
             count++;
@@ -146,11 +144,11 @@ public class PlayHandler {
         stackPane.getChildren().add(noteText);
 
         int centreX = 17;
-        noteText.setTranslateX(centreX-count*10);
+        noteText.setTranslateX(centreX - count * 10);
         noteText.setFill(Paint.valueOf("white"));
     }
 
-    private void makeAndSetIV(StackPane stackPane){
+    private void makeAndSetIV(StackPane stackPane) {
         Beat beat = new BeatImpl("yellow", "/sample/Resources/Images/beat.png");
         ImageView beatIV = beat.getBeatImageView();
         beatIV.setCache(true);
@@ -180,11 +178,11 @@ public class PlayHandler {
         double songPosition = song.getPlayer().getCurrentTime().toMillis() - song.getOffSet() * 1000;
 
         // which beat the song is currently at.
-        if(song.getPlayer().getCurrentTime().toSeconds()==0){
-            offsetTime= System.currentTimeMillis() - startingTime;
+        if (song.getPlayer().getCurrentTime().toSeconds() == 0) {
+            offsetTime = System.currentTimeMillis() - startingTime;
         }
 
-        songPositionInBeats = ((songPosition+offsetTime) / secPerBeat) / 1000;
+        songPositionInBeats = ((songPosition + offsetTime) / secPerBeat) / 1000;
 
         HashMap<Pane, ArrayList<StackPane>> finishedBeats = new HashMap<>();
         for (Pane column : beatSPs.keySet()) {
@@ -200,7 +198,7 @@ public class PlayHandler {
                         finishedBeats.get(column).add(beat);
                     }
                 } else {
-                    beat.setLayoutY(beat.getLayoutY() + (766/(4*secPerBeat)/60)*(speedMultiplier));
+                    beat.setLayoutY(beat.getLayoutY() + (766 / (4 * secPerBeat) / 60) * (speedMultiplier));
                 }
             }
         }

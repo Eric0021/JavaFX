@@ -1,15 +1,28 @@
 package sample.Handler;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 public class MidiParseHandler {
-    public TreeMap<Double, List<String>> parse(String csvPath) {
+    private String midiName;
+
+    public MidiParseHandler(String midiName) {
+        this.midiName = midiName;
+    }
+
+    public TreeMap<Double, List<String>> parse() {
+        convertMidiCsv();
         String content = null;
         try {
-            content = Files.readString(Paths.get(csvPath), StandardCharsets.US_ASCII);
+            content = Files.readString(Paths.get("src/sample/Resources/Midi/Csv/" + midiName + ".csv"), StandardCharsets.US_ASCII);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -25,7 +38,7 @@ public class MidiParseHandler {
                 lines.add(scanner.nextLine());
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         boolean reading = false;
@@ -53,27 +66,6 @@ public class MidiParseHandler {
 
             if (reading) {
                 if (type.equals(" Note_on_c")) {
-                    // we have to find the duration of this note, by finding the next note_off_c with same note.
-//                    for (int j = i + 1; j < lines.size(); j++) {
-//                        String[] nextData = lines.get(j).split(",");
-//                        String nextType = nextData[2];
-//                        String nextMidiTime = "";
-//                        String nextNote = "";
-//                        if (nextData.length >= 5) {
-//                            nextMidiTime = nextData[1];
-//                            nextNote = nextData[4];
-//                        }
-//
-//                        if (nextType.equals(" Note_off_c") && nextNote.equals(note)) {
-//                            double midiTicks = Double.parseDouble(nextMidiTime) - Double.parseDouble(midiTime);
-//                            double numQNotes = midiTicks / 96;
-//                            double duration = numQNotes * msecPerQNote;
-//
-//                            notes.add(note);
-//                            durations.add(Double.toString(duration));
-//                        }
-//                    }
-
                     // the beat which the note is hit.
                     double beat = Double.parseDouble(midiTime) / 384;
                     if (beats.get(beat) == null) {
@@ -87,5 +79,36 @@ public class MidiParseHandler {
         }
 
         return beats;
+    }
+
+    private void convertMidiCsv() {
+        try {
+            String batPath = new File("src/sample/Resources/Midi/MidiCsv/ex.bat").getAbsolutePath();
+            String midicsvPath = new File("src/sample/Resources/Midi/MidiCsv/Midicsv.exe").getAbsolutePath();
+            String midiPath = new File("src/sample/Resources/Midi/"+midiName+".mid").getAbsolutePath();
+            String csvPath = new File("src/sample/Resources/Midi/Csv/"+midiName+".csv").getAbsolutePath();
+
+            // edit the .bat to parse the correct midi.
+            FileWriter fileW = new FileWriter(batPath);
+            String exWrite = '"' + midicsvPath + '"' + " " + '"' + midiPath + '"' + " " + '"' + csvPath + '"';
+            fileW.write(exWrite);
+            fileW.close();
+
+            Process p = null;
+            try {
+                // the dir paramter should be the directory of the bat file, not the path of the bat file itself.
+                File bat = new File("src/sample/Resources/Midi/MidiCsv");
+                p = Runtime.getRuntime().exec("cmd /c ex.bat", null, bat);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                p.waitFor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
