@@ -6,7 +6,7 @@ import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 
-public class LightPollution implements Song{
+public class LightPollution implements Song {
     private final String name = "SecretGarden";
     private final int duration = 240; // exactly 4 minutes somehow.
     private final String artist = "Atori";
@@ -15,10 +15,10 @@ public class LightPollution implements Song{
     // offset in seconds.
     private double offset = 0.25;
 
-    public LightPollution(){
-        String songPath = new File("src/sample/Resources/SongLib/"+name+".mp3").getAbsolutePath();
-        songPath = songPath.replace("\\","/");
-        Media media = new Media("file:///"+songPath.replaceAll(" ", "%20"));
+    public LightPollution() {
+        String songPath = new File("src/sample/Resources/SongLib/" + name + ".mp3").getAbsolutePath();
+        songPath = songPath.replace("\\", "/");
+        Media media = new Media("file:///" + songPath.replaceAll(" ", "%20"));
         player = new MediaPlayer(media);
     }
 
