@@ -7,7 +7,7 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 
 public class LightPollution implements Song{
-    private final String name = "SecretGardenTest";
+    private final String name = "SecretGarden";
     private final int duration = 240; // exactly 4 minutes somehow.
     private final String artist = "Atori";
     private final MediaPlayer player;
