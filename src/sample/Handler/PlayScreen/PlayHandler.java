@@ -162,24 +162,22 @@ public class PlayHandler {
         AnimationTimer animator = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
-                update_beats();
+                updateBeats();
             }
         };
 
         animator.start();
     }
 
-    private void update_beats() {
-        // how many seconds since song has started, adjusting for offset (offset is in seconds).
-        double songPosition = song.getPlayer().getCurrentTime().toMillis() - song.getOffSet() * 1000;
+    private void updateBeats() {
+        updatePreBeats();
 
-        // which beat the song is currently at.
-        if (song.getPlayer().getCurrentTime().toSeconds() == 0) {
-            offsetTime = System.currentTimeMillis() - startingTime;
-        }
+        HashMap<Pane, ArrayList<StackPane>> finishedBeats = makeBeatsFall();
 
-        songPositionInBeats = ((songPosition + offsetTime) / secPerBeat) / 1000;
+        removeFinishedBeats(finishedBeats);
+    }
 
+    private HashMap<Pane, ArrayList<StackPane>> makeBeatsFall(){
         HashMap<Pane, ArrayList<StackPane>> finishedBeats = new HashMap<>();
         for (Pane column : beatSPs.keySet()) {
             for (StackPane beat : beatSPs.get(column)) {
@@ -199,6 +197,10 @@ public class PlayHandler {
             }
         }
 
+        return finishedBeats;
+    }
+
+    private void removeFinishedBeats(HashMap<Pane, ArrayList<StackPane>> finishedBeats){
         for (Pane column : finishedBeats.keySet()) {
             for (StackPane beat : finishedBeats.get(column)) {
                 beatSPs.get(column).remove(beat);
@@ -207,5 +209,18 @@ public class PlayHandler {
                 column.getChildren().remove(beat);
             }
         }
+    }
+
+    private void updatePreBeats(){
+        // how many seconds since song has started, adjusting for offset (offset is in seconds).
+        double songPosition = song.getPlayer().getCurrentTime().toMillis() - song.getOffSet() * 1000;
+
+        // beats spawn before the song starts playing, offsetTime is time used to spawn these pre-beats.
+        if (song.getPlayer().getCurrentTime().toSeconds() == 0) {
+            offsetTime = System.currentTimeMillis() - startingTime;
+        }
+
+        // which beat the song is currently at.
+        songPositionInBeats = ((songPosition + offsetTime) / secPerBeat) / 1000;
     }
 }

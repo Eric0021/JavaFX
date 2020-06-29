@@ -1,5 +1,6 @@
 package sample.Handler.PlayScreen;
 
+import javafx.animation.FadeTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import sample.Handler.PlayScreen.RatingStrategy.RatingEnum;

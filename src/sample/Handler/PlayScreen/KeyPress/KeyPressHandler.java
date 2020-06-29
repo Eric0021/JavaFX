@@ -8,6 +8,8 @@ import javafx.scene.text.Text;
 import sample.Handler.MidiPiano.MidiObserver;
 import sample.Handler.MidiPiano.MidiReceiver;
 
+import java.util.List;
+
 public class KeyPressHandler {
     private MidiReceiver receiver;
     private KeyboardPressHandler keyboardHandler;
@@ -36,7 +38,7 @@ public class KeyPressHandler {
         keyboardHandler.keyboardPress(event);
     }
 
-    public void midiKeyPress(byte[] input){
-        pianoHandler.midiKeyPress(input);
+    public void midiKeyPress(List<byte[]> inputs){
+        pianoHandler.midiKeyPress(inputs);
     }
 }

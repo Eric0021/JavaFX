@@ -5,11 +5,7 @@ import sample.Handler.PlayScreen.KeyPress.KeyPressHandler;
 import javax.sound.midi.*;
 
 public class PianoHandler {
-    private KeyPressHandler keyPressHandler;
-
     public PianoHandler(KeyPressHandler keyPressHandler) {
-        this.keyPressHandler = keyPressHandler;
-
         MidiDevice device;
         MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
         for (MidiDevice.Info info: infos) {
@@ -21,8 +17,9 @@ public class PianoHandler {
                     // only the second one can have its transmitter set.
                     Transmitter trans;
                     try {
+                        // assuming keyboard only has one MIDI transmitter.
                         trans = device.getTransmitter();
-                        MidiReceiver receiver = new MidiReceiver(device.getDeviceInfo().toString());
+                        MidiReceiver receiver = new MidiReceiver();
                         trans.setReceiver(receiver);
                         keyPressHandler.setReceiver(receiver);
                     } catch (Exception e) {

@@ -16,7 +16,7 @@
          <top>
             <Pane cache="true" cacheHint="SPEED" prefHeight="94.0" prefWidth="1923.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text fx:id="songName" layoutX="1718.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="220.803466796875">
+                  <Text fx:id="songName" layoutX="1534.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="382.803466796875">
                      <font>
                         <Font name="Neuropol X Rg" size="40.0" />
                      </font>
@@ -95,6 +95,11 @@
                         <Image url="@../Images/playBackground.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="ratingIV" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="324.0" layoutX="8.0" layoutY="327.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Images/perfect.png" />
+                     </image>
+                  </ImageView>
                </children>
             </Pane>
          </right>
@@ -112,11 +117,6 @@
             <Font name="Corbel" size="200.0" />
          </font>
       </Text>
-      <ImageView fx:id="ratingIV" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="324.0" layoutX="805.0" layoutY="387.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/perfect.png" />
-         </image>
-      </ImageView>
       <Text fx:id="combo" fill="#ff5291" layoutX="943.0" layoutY="417.0" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
          <font>
             <Font name="Arial Black" size="45.0" />

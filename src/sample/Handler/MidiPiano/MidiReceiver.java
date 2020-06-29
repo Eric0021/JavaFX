@@ -1,17 +1,9 @@
 package sample.Handler.MidiPiano;
 
 import javax.sound.midi.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.*;
 
 public class MidiReceiver implements Receiver {
-    private String name;
     private MidiObserver observer;
-
-    public MidiReceiver(String name) {
-        this.name = name;
-    }
 
     public void send(MidiMessage msg, long timeStamp) {
         // midi info is sent here through msg.
