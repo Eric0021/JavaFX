@@ -2,7 +2,6 @@ package sample.Handler.PlayScreen;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.CacheHint;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -10,10 +9,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import sample.FlyWeight.Beat.Beat;
 import sample.FlyWeight.Beat.BeatImpl;
-import sample.FlyWeight.Notes.Note;
-import sample.FlyWeight.Notes.NoteImpl;
-import sample.FlyWeight.Notes.NoteTranslator;
-import sample.Handler.MidiParseHandler;
+import sample.Handler.NoteTranslator;
 import sample.songs.Song;
 
 import java.util.*;

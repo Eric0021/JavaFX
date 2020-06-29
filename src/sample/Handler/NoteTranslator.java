@@ -1,4 +1,4 @@
-package sample.FlyWeight.Notes;
+package sample.Handler;
 
 public class NoteTranslator {
     public static String translate(String noteString) {

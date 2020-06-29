@@ -1,4 +1,4 @@
-package sample.Handler.PlayScreen;
+package sample.Handler.PlayScreen.KeyPress;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,11 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import sample.Handler.PlayScreen.ScoreHandler;
 
-public class KeyPressHandler {
+public class KeyboardPressHandler {
     private ImageView ratingIV;
     private double beatHalfHeight;
-
     @FXML
     private Button button1;
     @FXML
@@ -31,7 +31,7 @@ public class KeyPressHandler {
     @FXML
     private Text combo;
 
-    public KeyPressHandler(ImageView ratingIV, Text score, Text combo, double beatHalfHeight,
+    KeyboardPressHandler(ImageView ratingIV, Text score, Text combo, double beatHalfHeight,
                            Button button1, Button button2, Button button3, Button button4) {
         this.ratingIV = ratingIV;
         this.score = score;
@@ -45,11 +45,13 @@ public class KeyPressHandler {
         setKeyPress();
     }
 
+    // for handling keyboard presses.
     private void setKeyPress() {
         HBox bp = (HBox) button1.getParent().getParent();
         bp.addEventHandler(KeyEvent.KEY_PRESSED, this::specifyKeys);
     }
 
+    // for handling keyboard presses.
     private void specifyKeys(KeyEvent ev) {
         if (ev.getCode() == KeyCode.D) {
             button1.fire();
@@ -63,8 +65,9 @@ public class KeyPressHandler {
         ev.consume();
     }
 
+    // for handling keyboard presses.
     @FXML
-    public void keyPress(ActionEvent event) {
+    void keyboardPress(ActionEvent event) {
         // miss height is button's bottom.
         Button button = (Button) event.getSource();
         Pane column = (Pane) ((Node) event.getSource()).getParent();

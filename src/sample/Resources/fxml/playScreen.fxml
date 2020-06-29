@@ -42,7 +42,7 @@
             </ImageView>
          </left>
          <center>
-            <HBox cache="true" cacheHint="SPEED" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <HBox fx:id="hBox" cache="true" cacheHint="SPEED" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
                   <Pane fx:id="firstCol" cache="true" cacheHint="SPEED" prefHeight="200.0" prefWidth="230.0">
                      <children>

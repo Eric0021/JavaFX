@@ -1,6 +1,7 @@
 package sample.FlyWeight.Notes;
 
 import javafx.scene.text.Text;
+import sample.Handler.NoteTranslator;
 
 public class NoteImpl implements Note {
     private final String note;

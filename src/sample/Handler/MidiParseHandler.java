@@ -82,6 +82,8 @@ public class MidiParseHandler {
     }
 
     private void convertMidiCsv() {
+        // generates csv file from midi using Midicsv.exe.
+
         try {
             String batPath = new File("src/sample/Resources/Midi/MidiCsv/ex.bat").getAbsolutePath();
             String midicsvPath = new File("src/sample/Resources/Midi/MidiCsv/Midicsv.exe").getAbsolutePath();
