@@ -20,9 +20,9 @@
             <ColorAdjust />
          </effect>
          <children>
-            <ImageView fitHeight="1100.0" fitWidth="2057.0" layoutY="-7.0" opacity="0.84" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="1136.0" fitWidth="2153.0" layoutY="-6.0" opacity="0.84" pickOnBounds="true">
                <image>
-                  <Image url="@../Images/10846.png" />
+                  <Image url="@../Images/10846.jpg" />
                </image>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="104.0" layoutX="-1415.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="1923.0" />
@@ -37,7 +37,7 @@
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff0033" height="121.0" layoutX="118.0" layoutY="33.0" rotate="33.7" stroke="BLACK" strokeType="INSIDE" width="12.0" />
          </children>
       </Pane>
-      <ScrollPane hbarPolicy="NEVER" layoutY="141.0" pannable="true" prefHeight="844.0" prefWidth="1920.0" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="NEVER">
+      <ScrollPane hbarPolicy="NEVER" layoutY="141.0" pannable="true" prefHeight="870.0" prefWidth="1920.0" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="NEVER">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="768.0" prefWidth="2800.0" style="-fx-background-color: transparent;">
                <children>
